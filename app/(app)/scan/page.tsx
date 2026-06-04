@@ -6,6 +6,24 @@ import styles from "./page.module.css";
 
 type Step = "front" | "side" | "analyzing";
 
+const compressImage = (file: File, maxWidth = 1024, quality = 0.82): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const scale = Math.min(1, maxWidth / img.width);
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Image load failed")); };
+    img.src = url;
+  });
+};
+
 export default function ScanPage() {
   const router = useRouter();
   const [step, setStep] = useState<Step>("front");
@@ -40,27 +58,29 @@ export default function ScanPage() {
 
   const capturePhoto = () => {
     if (!videoRef.current) return;
+    const video = videoRef.current;
+    const scale = Math.min(1, 1024 / video.videoWidth);
     const canvas = document.createElement("canvas");
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
-    canvas.getContext("2d")!.drawImage(videoRef.current, 0, 0);
-    const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+    canvas.width = video.videoWidth * scale;
+    canvas.height = video.videoHeight * scale;
+    canvas.getContext("2d")!.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
     stopCamera();
     if (step === "front") { setFrontImage(dataUrl); setStep("side"); }
     else { setSideImage(dataUrl); }
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith("image/")) { setError("Please select an image file."); return; }
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const dataUrl = ev.target?.result as string;
+    try {
+      const dataUrl = await compressImage(file);
       if (step === "front") { setFrontImage(dataUrl); setStep("side"); }
       else { setSideImage(dataUrl); }
-    };
-    reader.readAsDataURL(file);
+    } catch {
+      setError("Failed to process image. Please try again.");
+    }
     e.target.value = "";
   };
 
