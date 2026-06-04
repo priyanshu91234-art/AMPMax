@@ -9,3 +9,28 @@ const connectionString =
 
 const sql = neon(connectionString);
 export const db = drizzle(sql, { schema });
+
+let validationStarted = false;
+
+/**
+ * Validates that the database connection is working and required tables exist.
+ */
+export async function validateSchema() {
+  if (validationStarted) return;
+  validationStarted = true;
+  try {
+    await db.select({ id: schema.users.id }).from(schema.users).limit(1);
+    console.log("[DB] Schema validation successful.");
+  } catch (error: any) {
+    if (error.message.includes("relation \"users\" does not exist")) {
+      console.error("[DB] CRITICAL: 'users' table missing. Run migrations.");
+      throw new Error("DATABASE_ERROR: 'users' table is missing. Run 'npx drizzle-kit push'.");
+    }
+    console.error("[DB] Validation error:", error.message);
+  }
+}
+
+// We don't await here to avoid blocking module load, 
+// but it will fire off and log/warn.
+validateSchema();
+
