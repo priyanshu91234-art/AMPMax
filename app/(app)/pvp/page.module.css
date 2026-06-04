@@ -1,0 +1,364 @@
+.page {
+  padding: 24px 20px 40px;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 70vh;
+}
+
+/* Lobby */
+.lobby {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+
+.pvpHeroOrb {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(100, 80, 200, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.pvpTitle {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.pvpDesc {
+  color: #606060;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+.moggerText {
+  color: #e0e0e0;
+}
+
+.pvpRules {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.pvpRule {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.875rem;
+  color: #707070;
+}
+
+.pvpRuleNum {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #808080;
+  flex-shrink: 0;
+}
+
+.pvpNote {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #3a3a3a;
+}
+
+.errorMsg {
+  color: #ef4444;
+  font-size: 0.875rem;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+/* Searching */
+.searchingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+  position: relative;
+}
+
+.searchingRing {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  animation: pulseRing 2s ease-out infinite;
+}
+
+.searchingRing2 {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  animation: pulseRing 2s ease-out infinite 0.5s;
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: scale(1.2); opacity: 0; }
+}
+
+.searchingTitle {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  position: relative;
+}
+
+.searchingSubtitle {
+  color: #404040;
+  font-size: 0.875rem;
+  position: relative;
+}
+
+.localPreviewSmall {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.localVideoSmall {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+}
+
+.localLabel {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6875rem;
+  color: #444;
+}
+
+/* Arena */
+.arena {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  min-height: 60vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.arenaVideos {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.videoSlot {
+  flex: 1;
+  position: relative;
+  aspect-ratio: 3/4;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.arenaVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.videoLabel {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.vsLabel {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #404040;
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
+}
+
+.countdownOverlay {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.countdownNum {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.analyzingBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 100px;
+  color: #888;
+  font-size: 0.875rem;
+}
+
+.analyzeSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #c0c0c0;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Results */
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 60vh;
+  justify-content: center;
+}
+
+.resultCards {
+  display: flex;
+  gap: 12px;
+}
+
+.resultCard {
+  flex: 1;
+  border-radius: 20px;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  min-height: 180px;
+  justify-content: center;
+}
+
+.winnerCard {
+  background: rgba(255, 215, 100, 0.04);
+  border-color: rgba(255, 215, 100, 0.25);
+  box-shadow: 0 0 40px rgba(255, 215, 100, 0.1), 0 0 80px rgba(255, 215, 100, 0.05);
+}
+
+.loserCard {
+  background: rgba(255, 255, 255, 0.01);
+  filter: brightness(0.55) grayscale(0.8);
+}
+
+.crownBadge {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #ffd700, #ffaa00);
+  color: #000;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 5px 12px;
+  border-radius: 0 0 12px 12px;
+}
+
+.moggedStamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  border: 3px solid rgba(239, 68, 68, 0.6);
+  color: rgba(239, 68, 68, 0.8);
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  padding: 6px 12px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.resultName {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #404040;
+  text-transform: uppercase;
+}
+
+.resultRatingNum {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #e0e0e0;
+  line-height: 1;
+}
+
+.resultSlash {
+  font-size: 1rem;
+  color: #404040;
+  font-weight: 500;
+}
+
+.resultFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.resultVerdict {
+  font-size: 0.9375rem;
+  color: #606060;
+  text-align: center;
+  font-style: italic;
+}

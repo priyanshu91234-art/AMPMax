@@ -1,0 +1,113 @@
+.page {
+  padding: 32px 20px 32px;
+}
+
+/* Skeleton states */
+.skeletonHero {
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.skeletonTitle {
+  height: 2.5rem;
+  width: 60%;
+}
+.skeletonSub {
+  height: 1rem;
+  width: 40%;
+}
+.skeletonCards {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.skeletonCard {
+  height: 80px;
+  border-radius: 16px;
+}
+
+/* Hero */
+.hero {
+  padding: 16px 0 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.greeting {
+  font-size: 0.9375rem;
+  color: #606060;
+}
+
+.name {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+.prompt {
+  color: #505050;
+  font-size: 0.9375rem;
+  margin-bottom: 12px;
+}
+
+.mainCta {
+  display: inline-flex;
+}
+
+/* Action cards */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.actionCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 16px;
+  text-decoration: none;
+  transition: all 200ms ease;
+}
+
+.actionCard:hover {
+  transform: translateX(4px);
+}
+
+.actionIcon {
+  color: #888;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.actionLabel {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  margin-bottom: 2px;
+}
+
+.actionDesc {
+  font-size: 0.8125rem;
+  color: #505050;
+}
+
+.actionArrow {
+  margin-left: auto;
+  color: #404040;
+  flex-shrink: 0;
+  transition: transform 200ms ease, color 200ms ease;
+}
+
+.actionCard:hover .actionArrow {
+  transform: translateX(4px);
+  color: #808080;
+}

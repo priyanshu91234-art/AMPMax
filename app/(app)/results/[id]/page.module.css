@@ -1,0 +1,286 @@
+.page {
+  padding: 24px 20px 40px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Skeleton */
+.skeletonRating {
+  height: 120px;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #111 0%, rgba(255,255,255,0.05) 50%, #111 100%);
+  background-size: 200% 100%;
+  animation: skeleton-wave 1.8s linear infinite;
+  margin-bottom: 16px;
+}
+.skeletonBadge {
+  height: 28px;
+  width: 80px;
+  margin: 0 auto 24px;
+  border-radius: 100px;
+}
+.skeletonSection {
+  height: 120px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+}
+@keyframes skeleton-wave {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Error state */
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  min-height: 50vh;
+  justify-content: center;
+}
+.errorText { color: #606060; font-size: 0.9375rem; }
+
+/* Rating Hero */
+.ratingHero {
+  text-align: center;
+  padding: 40px 0 32px;
+  position: relative;
+}
+
+.ratingOrb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(150, 150, 180, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.ratingDisplay {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.ratingNum {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffffff 0%, #b0b0b0 50%, #e8e8e8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.ratingSlash {
+  font-size: 1.75rem;
+  color: #505050;
+  font-weight: 500;
+}
+
+.tierBadge {
+  font-size: 0.875rem;
+  padding: 6px 16px;
+}
+
+.ratingDate {
+  margin-top: 12px;
+  font-size: 0.8125rem;
+  color: #404040;
+}
+
+/* Sections */
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  margin-bottom: 14px;
+}
+
+.sectionSubtitle {
+  font-size: 0.8125rem;
+  color: #505050;
+  margin-top: -10px;
+  margin-bottom: 14px;
+}
+
+/* Analysis */
+.analysisGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.analysisCard {
+  padding: 16px;
+}
+
+.analysisLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.analysisText {
+  font-size: 0.875rem;
+  color: #b0b0b0;
+  line-height: 1.6;
+}
+
+/* Roadmap */
+.roadmap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.phaseCard {
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.phaseHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.phaseDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.phaseTimeframe {
+  font-size: 0.75rem;
+  color: #505050;
+  margin-bottom: 2px;
+}
+
+.phaseTitle {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #d0d0d0;
+}
+
+.phasePriority {
+  margin-left: auto;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.phaseSteps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 20px;
+}
+
+.phaseStep {
+  font-size: 0.875rem;
+  color: #808080;
+  line-height: 1.5;
+  position: relative;
+}
+
+.phaseStepDot {
+  position: absolute;
+  left: -16px;
+  top: 8px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Products */
+.products {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.productCard {
+  padding: 18px 16px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 200ms ease;
+}
+
+.productTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.productCategory {
+  font-size: 0.6875rem;
+  color: #505050;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 3px;
+}
+
+.productName {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #d0d0d0;
+}
+
+.productPrice {
+  font-size: 0.875rem;
+  color: #808080;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.productReason {
+  font-size: 0.8125rem;
+  color: #606060;
+  line-height: 1.5;
+}
+
+.productBuyRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.productBuyLink {
+  font-size: 0.8125rem;
+  color: #c8c8c8;
+  font-weight: 500;
+}
+
+/* Result actions */
+.resultActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}

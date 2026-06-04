@@ -1,0 +1,290 @@
+.page {
+  padding: 24px 20px 32px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Step Indicator */
+.stepIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 28px;
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+}
+
+.stepDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #505050;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 300ms ease;
+}
+
+.stepDotActive {
+  border-color: #e0e0e0;
+  background: rgba(224, 224, 224, 0.08);
+  color: #e0e0e0;
+  box-shadow: 0 0 12px rgba(224, 224, 224, 0.15);
+}
+
+.stepDotDone {
+  border-color: rgba(52, 211, 153, 0.4);
+  background: rgba(52, 211, 153, 0.08);
+  color: #34d399;
+}
+
+.stepLine {
+  width: 48px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: background 300ms ease;
+}
+
+.stepLineDone {
+  background: rgba(52, 211, 153, 0.3);
+}
+
+/* Capture */
+.capture {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.captureHeader {
+  text-align: center;
+}
+
+.captureTitle {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.captureHint {
+  color: #606060;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Previous thumbnail */
+.prevThumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(52, 211, 153, 0.06);
+  border: 1px solid rgba(52, 211, 153, 0.15);
+  border-radius: 12px;
+}
+
+.thumbImg {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.thumbLabel {
+  flex: 1;
+  font-size: 0.875rem;
+  color: #34d399;
+  font-weight: 500;
+}
+
+.retakeThumb {
+  background: none;
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  color: #34d399;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.retakeThumb:hover {
+  background: rgba(52, 211, 153, 0.1);
+}
+
+/* Camera Frame */
+.cameraFrame {
+  border-radius: 20px;
+  overflow: hidden;
+  aspect-ratio: 4/5;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video, .previewImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cameraScanLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(200, 200, 200, 0.4), transparent);
+  animation: scanDown 2s ease-in-out infinite;
+}
+
+@keyframes scanDown {
+  0% { top: 0; }
+  50% { top: calc(100% - 2px); }
+  100% { top: 0; }
+}
+
+.cameraPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.placeholderText {
+  font-size: 0.875rem;
+  color: #404040;
+}
+
+/* Actions */
+.cameraActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.captureBtn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: none;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 200ms ease;
+}
+
+.captureBtn:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.captureBtnInner {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 200ms ease;
+}
+
+.captureBtn:active .captureBtnInner {
+  transform: scale(0.9);
+}
+
+.uploadActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.analyzeBtn {
+  margin-top: 4px;
+}
+
+.errorMsg {
+  color: #ef4444;
+  font-size: 0.875rem;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+/* Analyzing State */
+.analyzingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+  position: relative;
+}
+
+.analyzingOrb {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(120, 120, 140, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.scannerRing {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 2px solid rgba(200, 200, 200, 0.15);
+  border-top-color: rgba(200, 200, 200, 0.6);
+  animation: spin 1.2s linear infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.analyzingTitle {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.analyzingSubtitle {
+  font-size: 0.875rem;
+  color: #505050;
+}
+
+.analyzingDots {
+  display: flex;
+  gap: 6px;
+}
+
+.analyzingDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #808080;
+}
