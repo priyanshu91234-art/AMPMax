@@ -13,6 +13,8 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const { frontImage, sideImage } = body;
+    console.log("Front image length:", frontImage?.length);
+    console.log("Side image length:", sideImage?.length);
 
     if (!frontImage || !sideImage) {
       return NextResponse.json(
