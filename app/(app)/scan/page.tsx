@@ -31,6 +31,7 @@ export default function ScanPage() {
   const [sideImage, setSideImage] = useState<string | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
   const [error, setError] = useState("");
+  const [progress, setProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -110,9 +111,19 @@ export default function ScanPage() {
   };
 
   const handleAnalyze = async () => {
-    if (!frontImage || !sideImage) return;
+    if (!frontImage) return;
     setStep("analyzing");
     setError("");
+    setProgress(0);
+
+    // Simulate progress
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 95) return prev;
+        return prev + (prev < 60 ? 5 : 2);
+      });
+    }, 400);
+
     try {
       const res = await fetch("/api/scan", {
         method: "POST",
@@ -120,9 +131,17 @@ export default function ScanPage() {
         body: JSON.stringify({ frontImage, sideImage }),
       });
       const data = await res.json();
+      clearInterval(interval);
+      setProgress(100);
+      
       if (!res.ok) throw new Error(data.error || "Analysis failed");
-      router.push(`/results/${data.id}`);
+      
+      // Short delay for the 100% to be visible
+      setTimeout(() => {
+        router.push(`/results/${data.id}`);
+      }, 500);
     } catch (err) {
+      clearInterval(interval);
       setError(err instanceof Error ? err.message : "Analysis failed. Please try again.");
       setStep("side");
     }
@@ -137,7 +156,7 @@ export default function ScanPage() {
 
   const stepLabels = { front: "Front Profile", side: "Side Profile", analyzing: "Analyzing" };
   const currentImage = step === "side" ? frontImage : sideImage;
-  const bothImages = frontImage && sideImage;
+  const canAnalyze = !!frontImage;
 
   return (
     <div className={styles.page}>
@@ -170,6 +189,16 @@ export default function ScanPage() {
             <div className={styles.scannerRing} />
             <p className={styles.analyzingTitle}>Analyzing</p>
             <p className={styles.analyzingSubtitle}>Gemini Vision is processing your photos…</p>
+            
+            <div className={styles.progressContainer}>
+              <motion.div 
+                className={styles.progressBar}
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+              />
+            </div>
+            <p className={styles.progressText}>{progress}%</p>
+
             <div className={styles.analyzingDots}>
               {[0, 1, 2].map((i) => (
                 <motion.span
@@ -195,7 +224,7 @@ export default function ScanPage() {
               <p className={styles.captureHint}>
                 {step === "front"
                   ? "Face the camera directly. Keep neutral expression."
-                  : "Turn your head 90° to show your profile."}
+                  : "Turn your head 90°. (Optional: Take side profile for better analysis)"}
               </p>
             </div>
 
@@ -274,15 +303,15 @@ export default function ScanPage() {
               )}
             </div>
 
-            {/* Analyze CTA when both images ready */}
-            {bothImages && step === "side" && !cameraActive && sideImage && (
+            {/* Analyze CTA */}
+            {canAnalyze && !cameraActive && (
               <motion.button
                 className={`btn btn-chrome btn-lg w-full ${styles.analyzeBtn}`}
                 onClick={handleAnalyze}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                Analyze My Face
+                {sideImage ? "Analyze My Face" : "Analyze (Front Only)"}
               </motion.button>
             )}
 

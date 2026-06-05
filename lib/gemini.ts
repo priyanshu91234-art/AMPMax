@@ -172,9 +172,11 @@ export function getProductsForLabel(label: string): ProductRecommendation[] {
 
 export async function analyzeFace(
   frontImageBase64: string,
-  sideImageBase64: string
+  sideImageBase64?: string
 ): Promise<ScanResult> {
-  const prompt = `You are an expert facial aesthetics analyst. Analyze the provided front and side profile photos with scientific precision.
+  const hasSideContent = !!sideImageBase64 && sideImageBase64.length > 0;
+  const prompt = `You are an expert facial aesthetics analyst. Analyze the provided ${hasSideContent ? "front and side profile photos" : "front profile photo"} with scientific precision.
+${!hasSideContent ? "Note: Only the front profile was provided, so prioritize analysis based on the front view." : ""}
 
 Respond ONLY with a valid JSON object matching this exact schema:
 {
@@ -211,21 +213,27 @@ Respond ONLY with a valid JSON object matching this exact schema:
 
 Be specific, reference what you actually see in the images. Do not use generic advice. The rating must reflect actual aesthetic quality honestly.`;
 
-  const result = await model.generateContent([
+  const contents: any[] = [
     {
       inlineData: {
         mimeType: "image/jpeg",
         data: frontImageBase64,
       },
     },
-    {
+  ];
+
+  if (hasSideContent) {
+    contents.push({
       inlineData: {
         mimeType: "image/jpeg",
         data: sideImageBase64,
       },
-    },
-    prompt,
-  ]);
+    });
+  }
+
+  contents.push(prompt);
+
+  const result = await model.generateContent(contents);
 
   const text = result.response.text();
   const jsonMatch = text.match(/\{[\s\S]*\}/);

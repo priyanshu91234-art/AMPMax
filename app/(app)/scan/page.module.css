@@ -136,7 +136,14 @@
   justify-content: center;
 }
 
-.video, .previewImg {
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.previewImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -287,4 +294,26 @@
   height: 6px;
   border-radius: 50%;
   background: #808080;
+}
+
+.progressContainer {
+  width: 100%;
+  max-width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background: #fff;
+  transition: width 300ms ease-out;
+}
+
+.progressText {
+  font-size: 0.75rem;
+  color: #808080;
+  font-weight: 500;
 }

@@ -16,16 +16,16 @@ export async function POST(req: NextRequest) {
     console.log("Front image length:", frontImage?.length);
     console.log("Side image length:", sideImage?.length);
 
-    if (!frontImage || !sideImage) {
+    if (!frontImage) {
       return NextResponse.json(
-        { error: "Both front and side profile images are required" },
+        { error: "Front profile image is required" },
         { status: 400 }
       );
     }
 
     // Strip data URL prefix if present
     const frontBase64 = frontImage.replace(/^data:image\/\w+;base64,/, "");
-    const sideBase64 = sideImage.replace(/^data:image\/\w+;base64,/, "");
+    const sideBase64 = sideImage ? sideImage.replace(/^data:image\/\w+;base64,/, "") : undefined;
 
     const result = await analyzeFace(frontBase64, sideBase64);
 
