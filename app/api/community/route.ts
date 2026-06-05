@@ -59,6 +59,13 @@ export async function POST(req: NextRequest) {
 
     console.log("[COMMUNITY_POST] Request received:", { title, userId: session.user.id });
 
+    // Verify user exists in DB (Foreign Key safety)
+    const [dbUser] = await db.select({ id: users.id }).from(users).where(eq(users.id, session.user.id)).limit(1);
+    if (!dbUser) {
+      console.error("[COMMUNITY_POST] User ID missing from users table:", session.user.id);
+      return NextResponse.json({ error: "Authenticated user record not found in database. Please log out and log in again." }, { status: 403 });
+    }
+
     try {
       const [post] = await db
         .insert(communityPosts)

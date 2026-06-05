@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { communityVotes, communityPosts } from "@/lib/db/schema";
+import { communityVotes, communityPosts, users } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 
 export async function POST(
@@ -12,6 +12,11 @@ export async function POST(
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const [dbUser] = await db.select({ id: users.id }).from(users).where(eq(users.id, session.user.id)).limit(1);
+    if (!dbUser) {
+      return NextResponse.json({ error: "User record not found" }, { status: 403 });
     }
 
     const { id: postId } = await params;
