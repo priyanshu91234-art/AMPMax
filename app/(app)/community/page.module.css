@@ -74,8 +74,48 @@
 }
 
 .voteBtn:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.1);
   color: #fff;
+}
+
+.upvoted {
+  color: #ff4500 !important;
+}
+
+.upvoted:hover {
+  background: rgba(255, 69, 0, 0.1) !important;
+}
+
+.downvoted {
+  color: #7193ff !important;
+}
+
+.downvoted:hover {
+  background: rgba(113, 147, 255, 0.1) !important;
+}
+
+.upvotedText {
+  color: #ff4500;
+}
+
+.downvotedText {
+  color: #7193ff;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  gap: 16px;
+  color: #808080;
+}
+
+.empty h3 {
+  color: #fff;
+  margin: 0;
 }
 
 .voteCount {
@@ -206,6 +246,38 @@
 
 .field input:focus, .field textarea:focus {
   border-color: rgba(255, 255, 255, 0.2);
+}
+
+.modalTitleArea {
+  display: flex;
+  flex-direction: column;
+}
+
+.postingAs {
+  font-size: 0.8rem;
+  color: #808080;
+  margin-top: 4px;
+}
+
+.titleInput {
+  font-size: 1.1rem !important;
+  font-weight: 600;
+  background: none !important;
+  border-radius: 8px !important;
+}
+
+.contentInput {
+  background: none !important;
+  border-radius: 8px !important;
+  resize: none;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 @media (max-width: 640px) {

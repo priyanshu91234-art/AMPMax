@@ -21,6 +21,7 @@ interface PostDetail {
   content: string;
   upvotes: number;
   createdAt: string;
+  userVote?: number | null;
   user: {
     name: string;
     image: string | null;

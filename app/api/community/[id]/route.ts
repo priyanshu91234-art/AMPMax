@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { communityPosts, communityComments, users } from "@/lib/db/schema";
-import { eq, asc } from "drizzle-orm";
+import { communityPosts, communityComments, communityVotes, users } from "@/lib/db/schema";
+import { eq, asc, sql } from "drizzle-orm";
 
 export async function GET(
   req: NextRequest,
@@ -10,18 +11,33 @@ export async function GET(
   try {
     const { id } = await params;
     
+    const session = await auth();
+
+    // Base selector
+    const selector: any = {
+      id: communityPosts.id,
+      title: communityPosts.title,
+      content: communityPosts.content,
+      upvotes: communityPosts.upvotes,
+      createdAt: communityPosts.createdAt,
+      user: {
+        name: users.name,
+        image: users.image,
+      },
+    };
+
+    // If user is logged in, also fetch their vote
+    if (session?.user?.id) {
+      selector.userVote = sql<number>`(
+        SELECT value FROM ${communityVotes} 
+        WHERE ${communityVotes.postId} = ${communityPosts.id} 
+        AND ${communityVotes.userId} = ${session.user.id}
+        LIMIT 1
+      )`;
+    }
+
     const [post] = await db
-      .select({
-        id: communityPosts.id,
-        title: communityPosts.title,
-        content: communityPosts.content,
-        upvotes: communityPosts.upvotes,
-        createdAt: communityPosts.createdAt,
-        user: {
-          name: users.name,
-          image: users.image,
-        },
-      })
+      .select(selector)
       .from(communityPosts)
       .leftJoin(users, eq(communityPosts.userId, users.id))
       .where(eq(communityPosts.id, id));
