@@ -70,7 +70,8 @@ export default function CommunityPage() {
         setShowCreate(false);
         fetchPosts();
       } else {
-        alert(data.error || "Failed to create post. Please try again.");
+        const errorMsg = data.details ? `${data.error}: ${data.details}` : (data.error || "Failed to create post.");
+        alert(errorMsg);
       }
     } catch (err) {
       console.error(err);

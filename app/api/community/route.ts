@@ -93,6 +93,14 @@ export async function POST(req: NextRequest) {
         }, { status: 503 });
       }
 
+      // Check if ID is invalid UUID
+      if (dbError.message.includes("invalid input syntax for type uuid")) {
+        return NextResponse.json({ 
+          error: "System Identity Mismatch.", 
+          details: `The user ID in your session is not a valid UUID format. Please log out and sign up again to refresh your account profile.`
+        }, { status: 400 });
+      }
+
       return NextResponse.json({ 
         error: "Database error occurred while posting", 
         details: dbError.message 

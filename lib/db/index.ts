@@ -31,6 +31,13 @@ export async function validateSchema() {
         console.log("[DB] Initializing Community Tables...");
         const sqlClient = neon(connectionString);
         
+        // Ensure UUID extension is available
+        try {
+          await sqlClient`CREATE EXTENSION IF NOT EXISTS "pgcrypto";`;
+        } catch (extErr) {
+          console.warn("[DB] Could not ensure pgcrypto extension:", extErr);
+        }
+
         await sqlClient`
           CREATE TABLE IF NOT EXISTS "community_posts" (
             "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -39,23 +46,25 @@ export async function validateSchema() {
             "content" text NOT NULL,
             "upvotes" integer DEFAULT 0 NOT NULL,
             "created_at" timestamp DEFAULT now() NOT NULL
-          );
-          
+          );`;
+
+        
+        await sqlClient`
           CREATE TABLE IF NOT EXISTS "community_comments" (
             "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
             "post_id" uuid NOT NULL REFERENCES "community_posts"("id") ON DELETE CASCADE,
             "user_id" uuid NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
             "content" text NOT NULL,
             "created_at" timestamp DEFAULT now() NOT NULL
-          );
-          
+          );`;
+        
+        await sqlClient`
           CREATE TABLE IF NOT EXISTS "community_votes" (
             "user_id" uuid NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
             "post_id" uuid NOT NULL REFERENCES "community_posts"("id") ON DELETE CASCADE,
             "value" integer NOT NULL,
             PRIMARY KEY ("user_id", "post_id")
-          );
-        `;
+          );`;
         console.log("[DB] Community Tables created successfully.");
       }
     }
