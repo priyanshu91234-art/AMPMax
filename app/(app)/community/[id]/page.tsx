@@ -116,7 +116,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
         </div>
         <div className={styles.postContent}>
           <div className={styles.postMeta}>
-            <span className={styles.author}>Posted by {post.user.name || "Anonymous"}</span>
+            <span className={styles.author}>Posted by {post.user?.name || "Anonymous"}</span>
             <span className={styles.dot}>•</span>
             <span className={styles.date}>{new Date(post.createdAt).toLocaleDateString()}</span>
           </div>
@@ -151,7 +151,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
           {post.comments.map((comment) => (
             <div key={comment.id} className={styles.commentItem}>
               <div className={styles.commentMeta}>
-                <span className={styles.commentAuthor}>{comment.user.name || "Anonymous"}</span>
+                <span className={styles.commentAuthor}>{comment.user?.name || "Anonymous"}</span>
                 <span className={styles.dot}>•</span>
                 <span className={styles.commentDate}>{new Date(comment.createdAt).toLocaleDateString()}</span>
               </div>

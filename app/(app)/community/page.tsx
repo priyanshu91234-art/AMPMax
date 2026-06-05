@@ -105,26 +105,28 @@ export default function CommunityPage() {
         </div>
       ) : (
         <div className={styles.feed}>
-          {posts.map((post) => (
-            <Link key={post.id} href={`/community/${post.id}`} className={`glass-card ${styles.postCard}`}>
+          {Array.isArray(posts) && posts.map((post) => (
+            <div key={post.id} className={`glass-card ${styles.postCard}`}>
               <div className={styles.voteColumn}>
-                <button 
+                <div 
                   className={styles.voteBtn}
                   onClick={(e) => handleVote(post.id, 1, e)}
+                  role="button"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 15l-6-6-6 6" /></svg>
-                </button>
+                </div>
                 <span className={styles.voteCount}>{post.upvotes}</span>
-                <button 
+                <div 
                   className={styles.voteBtn}
                   onClick={(e) => handleVote(post.id, -1, e)}
+                  role="button"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6" /></svg>
-                </button>
+                </div>
               </div>
-              <div className={styles.postContent}>
+              <Link href={`/community/${post.id}`} className={styles.postContent}>
                 <div className={styles.postMeta}>
-                  <span className={styles.author}>Posted by {post.user.name || "Anonymous"}</span>
+                  <span className={styles.author}>Posted by {post.user?.name || "Anonymous"}</span>
                   <span className={styles.dot}>•</span>
                   <span className={styles.date}>{new Date(post.createdAt).toLocaleDateString()}</span>
                 </div>
@@ -136,8 +138,8 @@ export default function CommunityPage() {
                     <span>View Comments</span>
                   </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           ))}
         </div>
       )}

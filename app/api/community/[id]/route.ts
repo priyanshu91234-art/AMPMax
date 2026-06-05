@@ -23,7 +23,7 @@ export async function GET(
         },
       })
       .from(communityPosts)
-      .innerJoin(users, eq(communityPosts.userId, users.id))
+      .leftJoin(users, eq(communityPosts.userId, users.id))
       .where(eq(communityPosts.id, id));
 
     if (!post) {
