@@ -1,0 +1,219 @@
+.page {
+  padding: 24px 20px 100px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  gap: 20px;
+}
+
+.title {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: #808080;
+  font-size: 0.95rem;
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.postSkeleton {
+  height: 180px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+
+.postCard {
+  display: flex;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: all 200ms ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.postCard:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.voteColumn {
+  padding: 16px 8px;
+  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.voteBtn {
+  background: none;
+  border: none;
+  color: #404040;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 200ms ease;
+}
+
+.voteBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.voteCount {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.postContent {
+  padding: 16px 20px;
+  flex: 1;
+}
+
+.postMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.75rem;
+  color: #606060;
+}
+
+.dot {
+  opacity: 0.4;
+}
+
+.postTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.postBody {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.postActions {
+  display: flex;
+  gap: 16px;
+}
+
+.actionItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  color: #606060;
+  font-weight: 500;
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal {
+  width: 100%;
+  max-width: 540px;
+  padding: 32px;
+  border-radius: 24px;
+  background: #0a0a0a;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.modalHeader h2 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  color: #606060;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.field input, .field textarea {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 200ms ease;
+}
+
+.field input:focus, .field textarea:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-bottom: 120px;
+  }
+  .pageHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
