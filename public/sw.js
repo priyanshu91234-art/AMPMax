@@ -1,31 +1,41 @@
 /**
- * AMPMAX Service Worker — Cache-First Strategy
- * Version this string whenever you deploy significant changes so
- * old caches are automatically purged on activation.
+ * AMPMAX Service Worker — Static-Asset-Only Caching
+ *
+ * IMPORTANT: We ONLY cache static resources (images, fonts, CSS, JS bundles).
+ * We NEVER cache HTML pages, navigation requests, API calls, or auth routes.
+ *
+ * This prevents stale cached redirects/pages from breaking authentication,
+ * OAuth flows, middleware redirects, and session handling.
+ *
+ * Bump CACHE_VERSION on deploy to purge stale assets.
  */
-const CACHE_VERSION = 'ampmax-v1';
+const CACHE_VERSION = 'ampmax-v2';
 
-const APP_SHELL = [
-  '/',
-  '/dashboard',
+// Only truly static, non-HTML files go here.
+const PRECACHE_ASSETS = [
   '/manifest.json',
+  '/icons/icon-72x72.png',
+  '/icons/icon-96x96.png',
+  '/icons/icon-128x128.png',
+  '/icons/icon-144x144.png',
+  '/icons/icon-152x152.png',
   '/icons/icon-192x192.png',
+  '/icons/icon-384x384.png',
   '/icons/icon-512x512.png',
 ];
 
-// ─── Install ─────────────────────────────────────────────────────────────────
-// Pre-cache the app shell so the app loads instantly after first visit.
+// ─── Install ────────────────────────────────────────────────────────────────
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
       .open(CACHE_VERSION)
-      .then((cache) => cache.addAll(APP_SHELL))
-      .then(() => self.skipWaiting()) // Activate immediately
+      .then((cache) => cache.addAll(PRECACHE_ASSETS))
+      .then(() => self.skipWaiting())
   );
 });
 
-// ─── Activate ─────────────────────────────────────────────────────────────────
-// Delete all old cache versions so stale assets don't linger.
+// ─── Activate ───────────────────────────────────────────────────────────────
+// Purge ALL old cache versions so stale assets/pages are gone immediately.
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
@@ -37,61 +47,71 @@ self.addEventListener('activate', (event) => {
             .map((key) => caches.delete(key))
         )
       )
-      .then(() => self.clients.claim()) // Take control of all open pages
+      .then(() => self.clients.claim())
   );
 });
 
-// ─── Fetch ────────────────────────────────────────────────────────────────────
-// Cache-first for static assets; network-first for API/auth routes.
+// ─── Fetch ──────────────────────────────────────────────────────────────────
 self.addEventListener('fetch', (event) => {
   const { request } = event;
+
+  // 1. Only handle GET requests
+  if (request.method !== 'GET') return;
+
   const url = new URL(request.url);
 
-  // Skip non-GET requests and browser extension requests
-  if (request.method !== 'GET') return;
-  if (!url.protocol.startsWith('http')) return;
+  // 2. Only handle same-origin requests
+  if (url.origin !== self.location.origin) return;
 
-  // Never intercept API calls, auth, or Next.js internals —
-  // these must always go to the network.
-  const isApiOrAuth =
-    url.pathname.startsWith('/api/') ||
-    url.pathname.startsWith('/_next/') ||
-    url.pathname.startsWith('/_vercel/') ||
-    url.pathname.includes('__nextjs');
-
-  if (isApiOrAuth) {
-    // Network-only for dynamic routes
-    event.respondWith(fetch(request));
-    return;
+  // 3. NEVER intercept any of these — let them go straight to the network:
+  //    - Navigation requests (HTML pages, RSC payloads, redirects)
+  //    - API routes (/api/*)
+  //    - Auth routes (/api/auth/*, /auth/*, /login, /register)
+  //    - Next.js internals (/_next/webpack-hmr, /_next/data, RSC)
+  //    - Vercel internals
+  if (
+    request.mode === 'navigate' ||                  // any page navigation
+    request.headers.get('RSC') === '1' ||            // Next.js App Router RSC payload
+    request.headers.get('Next-Router-Prefetch') ||   // Next.js prefetch
+    url.pathname.startsWith('/api/') ||               // all API routes
+    url.pathname.startsWith('/auth/') ||              // auth pages
+    url.pathname.startsWith('/login') ||              // login page
+    url.pathname.startsWith('/register') ||           // register page
+    url.pathname.startsWith('/dashboard') ||          // authenticated pages
+    url.pathname.startsWith('/scan') ||               // authenticated pages
+    url.pathname.startsWith('/pvp') ||                // authenticated pages
+    url.pathname.startsWith('/progress') ||           // authenticated pages
+    url.pathname.startsWith('/community') ||          // authenticated pages
+    url.pathname.startsWith('/results') ||            // authenticated pages
+    url.pathname.startsWith('/pricing') ||            // authenticated pages
+    url.pathname.startsWith('/_next/') ||             // Next.js build assets & HMR
+    url.pathname.startsWith('/_vercel/') ||           // Vercel internals
+    url.pathname.includes('__nextjs')                 // Next.js debug routes
+  ) {
+    return; // Fall through to browser default (network fetch)
   }
 
-  // Cache-first for everything else (pages, icons, fonts, static assets)
+  // 4. Everything that reaches here is a static asset (icons, fonts, images,
+  //    CSS, client JS that isn't covered above). Use cache-first.
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
 
-      // Not in cache — fetch from network and store a copy
-      return fetch(request)
-        .then((response) => {
-          // Only cache valid same-origin responses
-          if (
-            !response ||
-            response.status !== 200 ||
-            response.type === 'opaque'
-          ) {
-            return response;
-          }
-
-          const toCache = response.clone();
-          caches.open(CACHE_VERSION).then((cache) => cache.put(request, toCache));
+      return fetch(request).then((response) => {
+        // Only cache successful, same-origin responses
+        if (
+          !response ||
+          response.status !== 200 ||
+          response.type !== 'basic'
+        ) {
           return response;
-        })
-        .catch(() => {
-          // Offline fallback: serve the cached root if we have it
-          if (request.mode === 'navigate') {
-            return caches.match('/');
-          }
-        });
+        }
+
+        const toCache = response.clone();
+        caches.open(CACHE_VERSION).then((cache) => cache.put(request, toCache));
+        return response;
+      });
+      // No offline fallback — if a static asset is missing, just fail naturally.
     })
   );
 });
