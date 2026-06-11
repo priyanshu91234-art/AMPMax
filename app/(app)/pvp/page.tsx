@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./page.module.css";
+import UpgradeModal from "@/components/UpgradeModal";
 
 type PVPState = "lobby" | "searching" | "connected" | "analyzing" | "result";
 
@@ -24,6 +25,15 @@ export default function PVPPage() {
   const channelRef = useRef<BroadcastChannel | null>(null);
   const [isInitiator, setIsInitiator] = useState(false);
   const [cameraError, setCameraError] = useState("");
+  const [showUpgrade, setShowUpgrade] = useState(false);
+  const [isPremium, setIsPremium] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    fetch("/api/subscription/status")
+      .then((r) => r.json())
+      .then((d) => setIsPremium(d.isPremium ?? false))
+      .catch(() => setIsPremium(false));
+  }, []);
 
   const startCamera = async () => {
     try {
@@ -59,6 +69,10 @@ export default function PVPPage() {
   useEffect(() => () => stopCamera(), [stopCamera]);
 
   const handleEnterQueue = async () => {
+    if (!isPremium) {
+      setShowUpgrade(true);
+      return;
+    }
     const stream = await startCamera();
     if (!stream) return;
     setPvpState("searching");
@@ -185,6 +199,7 @@ export default function PVPPage() {
 
   return (
     <div className={styles.page}>
+      <UpgradeModal isOpen={showUpgrade} onClose={() => setShowUpgrade(false)} reason="pvp" />
       <AnimatePresence mode="wait">
         {pvpState === "lobby" && (
           <motion.div

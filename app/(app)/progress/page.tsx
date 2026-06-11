@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import styles from "./page.module.css";
+import UpgradeModal from "@/components/UpgradeModal";
 
 interface HistoryItem {
   id: string;
@@ -19,12 +20,24 @@ const TIER_BADGE: Record<string, string> = {
 export default function ProgressPage() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isPremium, setIsPremium] = useState<boolean | null>(null);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   useEffect(() => {
-    fetch("/api/history")
+    fetch("/api/subscription/status")
       .then((r) => r.json())
-      .then((d) => { setHistory(d.results || []); setLoading(false); })
-      .catch(() => setLoading(false));
+      .then((d) => {
+        setIsPremium(d.isPremium ?? false);
+        if (d.isPremium) {
+          fetch("/api/history")
+            .then((r) => r.json())
+            .then((d) => { setHistory(d.results || []); setLoading(false); })
+            .catch(() => setLoading(false));
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch(() => { setIsPremium(false); setLoading(false); });
   }, []);
 
   const best = history.length ? Math.max(...history.map((h) => h.rating)) : null;
@@ -34,6 +47,7 @@ export default function ProgressPage() {
 
   return (
     <div className={styles.page}>
+      <UpgradeModal isOpen={showUpgrade} onClose={() => setShowUpgrade(false)} reason="progress" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -49,6 +63,20 @@ export default function ProgressPage() {
             <div key={i} className={`skeleton ${styles.skeletonItem}`} />
           ))}
         </div>
+      ) : !isPremium ? (
+        <motion.div
+          className={styles.emptyState}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <div className={styles.emptyIcon}>
+            <span style={{ fontSize: "2.5rem" }}>🔒</span>
+          </div>
+          <p className={styles.emptyTitle}>Premium Feature</p>
+          <p className={styles.emptyDesc}>Progress tracking is available for Premium members. Upgrade to see your full scan history and improvement over time.</p>
+          <button onClick={() => setShowUpgrade(true)} className="btn btn-chrome">Unlock Progress</button>
+        </motion.div>
       ) : history.length === 0 ? (
         <motion.div
           className={styles.emptyState}

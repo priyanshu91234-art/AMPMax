@@ -7,6 +7,7 @@ import {
   jsonb,
   primaryKey,
   uuid,
+  boolean,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -18,6 +19,8 @@ export const users = pgTable("users", {
   emailVerified: timestamp("email_verified", { mode: "date" }),
   image: text("image"),
   password: text("password"),
+  scanCount: integer("scan_count").default(0).notNull(),
+  stripeCustomerId: text("stripe_customer_id"),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
@@ -128,3 +131,18 @@ export const communityVotes = pgTable("community_votes", {
 }, (table) => [
   primaryKey({ columns: [table.userId, table.postId] }),
 ]);
+
+// ─── Subscriptions ───────────────────────────────────────────
+export const subscriptions = pgTable("subscriptions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  stripeSubscriptionId: text("stripe_subscription_id").notNull().unique(),
+  stripePriceId: text("stripe_price_id").notNull(),
+  stripeCurrentPeriodEnd: timestamp("stripe_current_period_end", { mode: "date" }).notNull(),
+  status: text("status").notNull(), // active, canceled, past_due, etc.
+  cancelAtPeriodEnd: boolean("cancel_at_period_end").default(false).notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull(),
+});

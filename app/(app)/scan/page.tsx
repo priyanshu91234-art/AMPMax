@@ -3,6 +3,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./page.module.css";
+import UpgradeModal from "@/components/UpgradeModal";
 
 type Step = "front" | "side" | "analyzing";
 
@@ -32,6 +33,7 @@ export default function ScanPage() {
   const [cameraActive, setCameraActive] = useState(false);
   const [error, setError] = useState("");
   const [progress, setProgress] = useState(0);
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -133,6 +135,14 @@ export default function ScanPage() {
       const data = await res.json();
       clearInterval(interval);
       setProgress(100);
+
+      if (res.status === 403 && data.error === "FREE_LIMIT_REACHED") {
+        setStep("front");
+        setFrontImage(null);
+        setSideImage(null);
+        setShowUpgrade(true);
+        return;
+      }
       
       if (!res.ok) throw new Error(data.error || "Analysis failed");
       
@@ -160,6 +170,7 @@ export default function ScanPage() {
 
   return (
     <div className={styles.page}>
+      <UpgradeModal isOpen={showUpgrade} onClose={() => setShowUpgrade(false)} reason="scan_limit" />
       {/* Step indicator */}
       {step !== "analyzing" && (
         <div className={styles.stepIndicator}>

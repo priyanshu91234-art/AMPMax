@@ -3,12 +3,27 @@ import { auth } from "@/lib/auth";
 import { analyzeFace } from "@/lib/gemini";
 import { db } from "@/lib/db";
 import { scanResults } from "@/lib/db/schema";
+import { canScan, incrementScanCount, FREE_SCAN_LIMIT } from "@/lib/subscription";
 
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = session.user.id;
+
+    // ─── Subscription / free-tier gate ───────────────────────
+    const allowed = await canScan(userId);
+    if (!allowed) {
+      return NextResponse.json(
+        {
+          error: "FREE_LIMIT_REACHED",
+          message: `You've used all ${FREE_SCAN_LIMIT} free scans. Upgrade to Premium for unlimited scans.`,
+        },
+        { status: 403 }
+      );
     }
 
     const body = await req.json();
@@ -33,7 +48,7 @@ export async function POST(req: NextRequest) {
     const [saved] = await db
       .insert(scanResults)
       .values({
-        userId: session.user.id,
+        userId,
         rating: result.rating,
         label: result.label,
         analysis: result.analysis,
@@ -41,6 +56,9 @@ export async function POST(req: NextRequest) {
         products: result.products,
       })
       .returning({ id: scanResults.id });
+
+    // Increment scan count for free-tier tracking
+    await incrementScanCount(userId);
 
     return NextResponse.json({ id: saved.id, ...result });
   } catch (error) {
